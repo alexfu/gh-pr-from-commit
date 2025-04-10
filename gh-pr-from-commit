@@ -37,9 +37,8 @@ printf "done.\n"
 printf "🍒 Cherry picking commit $COMMIT\n"
 git cherry-pick $COMMIT
 
-printf "📤 Pushing changes to $BASE..."
+printf "📤 Pushing changes to $BASE...\n"
 git push -q --set-upstream origin $BRANCH
-printf "done.\n"
 
 printf "🚀 Creating pull request...\n"
 if [ "$INTERACTIVE" = "true" ]; then
