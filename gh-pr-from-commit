@@ -4,11 +4,22 @@ set -e
 COMMIT=$1
 BASE="${2:-main}"
 BRANCH=$(whoami)/cherry-pick-$COMMIT
+INTERACTIVE="false"
+
+while getopts "i" opt; do
+    case $opt in
+        i)
+            INTERACTIVE="true"
+            ;;
+    esac
+done
+
+# Shift the processed options away
+shift $((OPTIND - 1))
 
 # Ensure we have required information
-
 if [ -z "$COMMIT" ]; then
-  echo "Usage: gh pr-from-commit <commit> [<base branch>]"
+  echo "Usage: gh pr-from-commit [-i] <commit> [<base branch>]"
   exit 1
 fi
 
@@ -26,9 +37,16 @@ printf "done.\n"
 printf "🍒 Cherry picking commit $COMMIT\n"
 git cherry-pick $COMMIT
 
-printf "🚀 Pushing changes to $BASE and creating pull request\n"
+printf "📤 Pushing changes to $BASE..."
 git push -q --set-upstream origin $BRANCH
-gh pr create --base $BASE
+printf "done.\n"
+
+printf "🚀 Creating pull request...\n"
+if [ "$INTERACTIVE" = "true" ]; then
+  gh pr create --base $BASE
+else
+  gh pr create --base $BASE --draft --fill
+fi
 printf "\n"
 
 printf "🧹 Cleaning up..."
