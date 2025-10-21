@@ -37,7 +37,7 @@ printf "done.\n"
 printf "🍒 Cherry picking commit $COMMIT\n"
 git cherry-pick $COMMIT
 
-printf "📤 Pushing changes to $BASE...\n"
+printf "📤 Pushing $BRANCH to origin...\n"
 git push -q --set-upstream origin $BRANCH
 
 printf "🚀 Creating pull request...\n"
